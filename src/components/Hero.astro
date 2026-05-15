@@ -1,51 +1,20 @@
 ---
-// Deterministic star field — no Math.random() so SSG stays consistent
-const stars = Array.from({ length: 130 }, (_, i) => ({
-  cx: ((i * 137.508 + 23.1) % 100).toFixed(2),
-  cy: ((i * 93.17  + 47.3) % 100).toFixed(2),
-  r:  (((i * 7 + 3) % 4) * 0.35 + 0.25).toFixed(2),
-  o:  (((i * 13 + 5) % 7) * 0.08 + 0.15).toFixed(2),
-}));
 ---
 
 <section id="hero" class="relative min-h-screen flex items-center overflow-hidden">
 
-  <!-- ── Space background ── -->
-  <div class="absolute inset-0" style="background:#030c18;">
-    <!-- Nebula blobs -->
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse 70% 55% at 25% 55%, rgba(8,28,90,0.85) 0%, transparent 65%);"></div>
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse 50% 60% at 72% 45%, rgba(35,15,75,0.55) 0%, transparent 60%);"></div>
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse 45% 40% at 55% 85%, rgba(0,20,65,0.7) 0%, transparent 55%);"></div>
-    <!-- Glow behind wireframe -->
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse 38% 42% at 73% 48%, rgba(0,140,255,0.10) 0%, transparent 60%);"></div>
-
-    <!-- Stars -->
-    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      {stars.map(s => (
-        <circle cx={s.cx} cy={s.cy} r={s.r} fill="white" opacity={s.o}/>
-      ))}
-      <!-- A few slightly larger/brighter stars -->
-      <circle cx="12" cy="18" r="0.9" fill="white" opacity="0.9"/>
-      <circle cx="67" cy="8"  r="0.7" fill="white" opacity="0.85"/>
-      <circle cx="88" cy="72" r="0.8" fill="white" opacity="0.8"/>
-      <circle cx="38" cy="91" r="0.6" fill="#a0d8ff" opacity="0.9"/>
-      <circle cx="5"  cy="62" r="0.7" fill="#ffd080" opacity="0.7"/>
-      <circle cx="54" cy="29" r="0.5" fill="#ffd080" opacity="0.6"/>
-    </svg>
-
-    <!-- Dashed perspective lines -->
-    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <line x1="350" y1="900" x2="1100" y2="100" stroke="#2060c0" stroke-width="1" stroke-dasharray="10,18" opacity="0.18"/>
-      <line x1="0"   y1="750" x2="1200" y2="200" stroke="#2060c0" stroke-width="1" stroke-dasharray="8,16"  opacity="0.13"/>
-      <line x1="500" y1="900" x2="1440" y2="300" stroke="#1850a0" stroke-width="1" stroke-dasharray="12,20" opacity="0.12"/>
-    </svg>
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img src="/hero.webp" alt="" class="w-full h-full object-cover object-center" aria-hidden="true"/>
+    <!-- Subtle dark overlay on the left so text stays readable -->
+    <div class="absolute inset-0" style="background: linear-gradient(90deg, rgba(3,12,24,0.65) 0%, rgba(3,12,24,0.3) 55%, transparent 100%);"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(0deg, rgba(3,12,24,0.5) 0%, transparent 40%);"></div>
   </div>
 
-  <!-- ── Main content grid ── -->
+  <!-- Content — left-aligned so it sits over the darker left half -->
   <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-8 items-center min-h-screen py-24">
+    <div class="grid lg:grid-cols-2 items-center min-h-screen py-24">
 
-      <!-- LEFT: content -->
       <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
         <!-- CNCF badge -->
         <div class="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full bg-white/8 border border-white/15 text-sm text-white/70 backdrop-blur-sm">
@@ -72,7 +41,7 @@ const stars = Array.from({ length: 130 }, (_, i) => ({
             </svg>
             <span class="font-semibold">October 24, 2026</span>
           </div>
-          <div class="w-px h-4 bg-white/20 hidden sm:block"></div>
+          <div class="w-px h-4 bg-white/25 hidden sm:block"></div>
           <div class="flex items-center gap-2 text-white">
             <svg class="w-5 h-5 text-[#326CE5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -86,10 +55,10 @@ const stars = Array.from({ length: 130 }, (_, i) => ({
         <div class="flex gap-3 sm:gap-4 mb-8" id="countdown">
           {["days","hours","minutes","seconds"].map(unit => (
             <div class="flex flex-col items-center">
-              <div class="w-14 h-14 sm:w-18 sm:h-18 bg-white/8 border border-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center mb-1.5">
+              <div class="w-14 h-14 sm:w-18 sm:h-18 bg-white/10 border border-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-1.5">
                 <span class="text-xl sm:text-2xl font-black text-white tabular-nums" data-unit={unit}>00</span>
               </div>
-              <span class="text-[10px] text-white/40 uppercase tracking-widest">{unit}</span>
+              <span class="text-[10px] text-white/45 uppercase tracking-widest">{unit}</span>
             </div>
           ))}
         </div>
@@ -101,104 +70,13 @@ const stars = Array.from({ length: 130 }, (_, i) => ({
             Register Now
           </button>
           <a href="/cfp"
-            class="px-7 py-3.5 bg-transparent border-2 border-white/40 text-white hover:bg-white/10 font-bold rounded-xl text-base transition-all hover:scale-105">
+            class="px-7 py-3.5 bg-transparent border-2 border-white/45 text-white hover:bg-white/10 font-bold rounded-xl text-base transition-all hover:scale-105">
             Submit a Talk
           </a>
         </div>
       </div>
 
-      <!-- RIGHT: wireframe globe decoration -->
-      <div class="hidden lg:flex justify-center items-center">
-        <svg viewBox="0 0 520 520" class="w-full max-w-lg drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stop-color="#1a6acc"/>
-              <stop offset="50%"  stop-color="#00c8ff"/>
-              <stop offset="100%" stop-color="#e0f8ff"/>
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2.5" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="glowStrong">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-
-          <!-- Outer polygon -->
-          <polygon
-            points="252,18 448,118 476,300 355,470 132,474 26,288 90,68"
-            fill="none" stroke="#1a6acc" stroke-width="1.8" opacity="0.7"
-            filter="url(#glow)"
-          />
-
-          <!-- Mid polygon -->
-          <polygon
-            points="252,112 378,185 394,318 274,398 152,355 145,220"
-            fill="none" stroke="#00a8e8" stroke-width="2" opacity="0.85"
-            filter="url(#glow)"
-          />
-
-          <!-- Inner hexagon -->
-          <polygon
-            points="252,192 328,238 328,330 252,378 178,330 178,238"
-            fill="none" stroke="#00d4ff" stroke-width="2.5" opacity="0.95"
-            filter="url(#glowStrong)"
-          />
-
-          <!-- Innermost cube lines -->
-          <line x1="252" y1="192" x2="252" y2="378" stroke="#80ecff" stroke-width="2" opacity="0.7" filter="url(#glow)"/>
-          <line x1="178" y1="238" x2="328" y2="330" stroke="#80ecff" stroke-width="2" opacity="0.7" filter="url(#glow)"/>
-          <line x1="328" y1="238" x2="178" y2="330" stroke="#80ecff" stroke-width="2" opacity="0.7" filter="url(#glow)"/>
-
-          <!-- Outer → mid connections -->
-          <line x1="252" y1="18"  x2="252" y2="112" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="448" y1="118" x2="378" y2="185" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="476" y1="300" x2="394" y2="318" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="355" y1="470" x2="274" y2="398" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="132" y1="474" x2="152" y2="355" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="26"  y1="288" x2="145" y2="220" stroke="#1a6acc" stroke-width="1.5" opacity="0.5"/>
-          <line x1="90"  y1="68"  x2="252" y2="112" stroke="#1a6acc" stroke-width="1.5" opacity="0.4"/>
-
-          <!-- Mid → inner connections -->
-          <line x1="252" y1="112" x2="252" y2="192" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-          <line x1="378" y1="185" x2="328" y2="238" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-          <line x1="394" y1="318" x2="328" y2="330" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-          <line x1="274" y1="398" x2="252" y2="378" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-          <line x1="152" y1="355" x2="178" y2="330" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-          <line x1="145" y1="220" x2="178" y2="238" stroke="#00a8e8" stroke-width="1.8" opacity="0.6"/>
-
-          <!-- Vertex dots -->
-          {[
-            [252,18],[448,118],[476,300],[355,470],[132,474],[26,288],[90,68],
-            [252,112],[378,185],[394,318],[274,398],[152,355],[145,220],
-            [252,192],[328,238],[328,330],[252,378],[178,330],[178,238],
-          ].map(([cx,cy]) => (
-            <circle cx={cx} cy={cy} r="3.5" fill="#00d4ff" opacity="0.8" filter="url(#glow)"/>
-          ))}
-
-          <!-- Pink labels -->
-          <!-- BUILDING (top area) -->
-          <g>
-            <rect x="175" y="-8" width="154" height="30" rx="5" fill="#e8197c"/>
-            <text x="252" y="11" text-anchor="middle" fill="white" font-weight="700" font-size="13" letter-spacing="2" font-family="Inter,sans-serif">BUILDING</text>
-            <line x1="252" y1="22" x2="252" y2="18" stroke="#e8197c" stroke-width="1.5"/>
-          </g>
-          <!-- BEYOND (right area) -->
-          <g>
-            <rect x="488" y="238" width="122" height="30" rx="5" fill="#e8197c"/>
-            <text x="549" y="257" text-anchor="middle" fill="white" font-weight="700" font-size="13" letter-spacing="2" font-family="Inter,sans-serif">BEYOND</text>
-            <line x1="488" y1="253" x2="476" y2="300" stroke="#e8197c" stroke-width="1.5" opacity="0.7"/>
-          </g>
-          <!-- GLOBE (bottom area) -->
-          <g>
-            <rect x="172" y="486" width="110" height="30" rx="5" fill="#e8197c"/>
-            <text x="227" y="505" text-anchor="middle" fill="white" font-weight="700" font-size="13" letter-spacing="2" font-family="Inter,sans-serif">GLOBE</text>
-            <line x1="227" y1="486" x2="244" y2="474" stroke="#e8197c" stroke-width="1.5" opacity="0.7"/>
-          </g>
-        </svg>
-      </div>
+      <!-- Right column intentionally empty — hero.png already has the globe here -->
 
     </div>
   </div>
@@ -218,7 +96,7 @@ const stars = Array.from({ length: 130 }, (_, i) => ({
   function updateCountdown() {
     const diff = new Date("2026-10-24T09:00:00+07:00").getTime() - Date.now();
     if (diff <= 0) return;
-    const pad = (n: number) => String(n).padStart(2,"0");
+    const pad = (n: number) => String(n).padStart(2, "0");
     const el  = (u: string) => document.querySelector(`[data-unit="${u}"]`);
     const d = el("days");    if (d) d.textContent = pad(Math.floor(diff / 86400000));
     const h = el("hours");   if (h) h.textContent = pad(Math.floor((diff % 86400000) / 3600000));
