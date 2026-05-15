@@ -1,0 +1,97 @@
+---
+const faqs = [
+  {
+    q: "Is KCD Indonesia free to attend?",
+    a: "Yes! Kubernetes Community Days Indonesia is a free community event. However, registration is required as seats are limited.",
+  },
+  {
+    q: "Who should attend KCD Indonesia?",
+    a: "Anyone interested in Kubernetes and cloud native technologies — developers, DevOps engineers, platform engineers, architects, students, and open source enthusiasts are all welcome.",
+  },
+  {
+    q: "When does registration open?",
+    a: "Registration will open in August 2026. Sign up for updates and we'll notify you as soon as tickets are available.",
+  },
+  {
+    q: "Will the sessions be recorded?",
+    a: "We plan to record and publish all main track sessions on YouTube after the event. Workshop recordings may be shared with registered attendees.",
+  },
+  {
+    q: "What language will the talks be in?",
+    a: "Talks may be delivered in Bahasa Indonesia or English. Each session listing will indicate the language.",
+  },
+  {
+    q: "Is there a Code of Conduct?",
+    a: "Yes. All attendees, speakers, and sponsors must adhere to the CNCF Code of Conduct. KCD Indonesia is committed to providing a safe, welcoming, and inclusive environment for everyone.",
+  },
+  {
+    q: "Can I submit a talk even if I've never spoken at a conference?",
+    a: "Absolutely! We actively encourage first-time speakers. The program committee reviews all submissions on merit. We also offer speaker mentoring — reach out to our team if you'd like guidance.",
+  },
+  {
+    q: "How do I become a sponsor?",
+    a: "We'd love to have your organization as a sponsor. Reach out to us at organizers@cloudnative.id and we'll send you our sponsorship prospectus.",
+  },
+];
+---
+
+<section id="faq" class="py-16 bg-white">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Accordion -->
+    <div class="space-y-3" id="faq-list">
+      {faqs.map((faq, i) => (
+        <div class="faq-item rounded-xl border border-gray-200 overflow-hidden" data-index={i}>
+          <button
+            class="faq-trigger w-full flex items-center justify-between p-5 text-left hover:bg-blue-50 transition-colors gap-4"
+            aria-expanded="false"
+          >
+            <span class="font-semibold text-gray-900">{faq.q}</span>
+            <svg
+              class="faq-icon w-5 h-5 text-[#326CE5] shrink-0 transition-transform duration-300"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 border-t border-gray-100">
+            <p class="text-gray-500 leading-relaxed pt-4">{faq.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Still have questions -->
+    <div class="mt-12 text-center p-8 rounded-2xl bg-blue-50 border border-blue-100">
+      <p class="text-gray-500 mb-4">Still have questions?</p>
+      <a href="mailto:organizers@cloudnative.id"
+        class="inline-flex items-center gap-2 text-[#326CE5] hover:text-[#2558d4] font-semibold transition-colors">
+        Contact the team
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".faq-trigger").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const item = btn.closest(".faq-item");
+      const content = item?.querySelector(".faq-content");
+      const icon = btn.querySelector(".faq-icon");
+      const isOpen = content?.classList.contains("hidden") === false;
+
+      // Close all
+      document.querySelectorAll(".faq-content").forEach((c) => c.classList.add("hidden"));
+      document.querySelectorAll(".faq-icon").forEach((i) => i.classList.remove("rotate-180"));
+      document.querySelectorAll(".faq-trigger").forEach((b) => b.setAttribute("aria-expanded", "false"));
+
+      // Open this one if it was closed
+      if (isOpen) return;
+      content?.classList.remove("hidden");
+      icon?.classList.add("rotate-180");
+      btn.setAttribute("aria-expanded", "true");
+    });
+  });
+</script>

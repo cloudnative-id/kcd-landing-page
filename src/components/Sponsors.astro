@@ -1,0 +1,91 @@
+---
+const tiers = [
+  {
+    name: "Platinum",
+    color: "#94A3B8",
+    slots: 1,
+    unlimited: false,
+    cardClass: "h-36",
+    textSize: "text-xl",
+  },
+  {
+    name: "Gold",
+    color: "#F59E0B",
+    slots: 4,
+    unlimited: false,
+    cardClass: "h-28",
+    textSize: "text-lg",
+  },
+  {
+    name: "Silver",
+    color: "#9CA3AF",
+    slots: 4,
+    unlimited: true,
+    cardClass: "h-24",
+    textSize: "text-base",
+  },
+  {
+    name: "Community",
+    color: "#326CE5",
+    slots: 4,
+    unlimited: true,
+    cardClass: "h-20",
+    textSize: "text-sm",
+  },
+];
+---
+
+<section id="sponsors" class="py-16 bg-[#EEF4FF]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-12">
+      {tiers.map((tier) => (
+        <div>
+          <!-- Tier label -->
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-2.5 h-2.5 rounded-full" style={`background-color: ${tier.color};`}></div>
+            <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400">{tier.name}</h3>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+
+          <!-- Placeholder cards -->
+          <div class="flex flex-wrap justify-center gap-4">
+            {Array.from({ length: tier.slots }).map((_, i) => (
+              <div
+                class={`flex flex-col items-center justify-center ${tier.cardClass} min-w-[220px] flex-1 max-w-xs rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
+              >
+                <span class={`font-semibold text-gray-400 ${tier.textSize} mb-1`}>Your Logo Here</span>
+                <span class="text-xs text-gray-300">
+                  {tier.unlimited
+                    ? "(open)"
+                    : `(${tier.slots - i} spot${tier.slots - i !== 1 ? "s" : ""} available)`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Become a sponsor CTA -->
+    <div class="mt-16 p-8 rounded-2xl text-center"
+      style="background: linear-gradient(135deg, #0D1B2A 0%, #1a3a8f 60%, #326CE5 100%);">
+      <h3 class="text-xl font-bold text-white mb-2">Become a Sponsor</h3>
+      <p class="text-white/60 mb-6 max-w-md mx-auto">
+        Support the cloud native community in Indonesia and get visibility in
+        front of 350+ developers, architects, and engineering leaders.
+      </p>
+      <button
+        disabled
+        class="inline-flex items-center gap-2 px-6 py-3 bg-white/40 text-white/40 font-semibold rounded-xl cursor-not-allowed shadow-sm"
+        title="Coming soon"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        View Sponsorship Prospectus
+        <span class="text-xs font-normal opacity-70">(coming soon)</span>
+      </button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import PageHero from '../components/PageHero.astro';
+import Sponsors from '../components/Sponsors.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Sponsors — KCD Indonesia 2026"
+  description="KCD Indonesia 2026 is made possible by the generous support of our sponsors. Interested in sponsoring? Get in touch."
+>
+  <Navbar />
+  <main>
+    <PageHero
+      badge="Sponsors"
+      title="Our"
+      highlight="Sponsors"
+      subtitle="KCD Indonesia is made possible by the generous support of these organizations."
+    />
+    <Sponsors />
+  </main>
+  <Footer />
+</Layout>

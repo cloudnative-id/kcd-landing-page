@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import PageHero from '../components/PageHero.astro';
+import Speakers from '../components/Speakers.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Speakers — KCD Indonesia 2026"
+  description="Meet the speakers at Kubernetes Community Days Indonesia 2026. Industry practitioners sharing real-world cloud native experience."
+>
+  <Navbar />
+  <main>
+    <PageHero
+      badge="Speakers"
+      title="Meet the"
+      highlight="Speakers"
+      subtitle="Industry practitioners and cloud native experts sharing real-world experience from Indonesia's leading tech companies."
+    />
+    <Speakers />
+  </main>
+  <Footer />
+</Layout>

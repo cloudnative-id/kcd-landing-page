@@ -1,0 +1,119 @@
+---
+const venueDetails = [
+  {
+    icon: "🏛️",
+    label: "Venue",
+    value: "TBA",
+  },
+  {
+    icon: "📍",
+    label: "Address",
+    value: "TBA",
+  },
+  {
+    icon: "📅",
+    label: "Date",
+    value: "Saturday, October 24, 2026",
+  },
+  {
+    icon: "🕗",
+    label: "Time",
+    value: "08:00 – 18:00 WIB",
+  },
+];
+
+const howToGet = [
+  {
+    icon: "🚄",
+    method: "Whoosh (High-Speed Rail)",
+    description: "Jakarta Halim → Padalarang → Bandung Station in ~45 minutes. Continue by shuttle or Gojek/Grab to the city center.",
+  },
+  {
+    icon: "🚆",
+    method: "Train",
+    description: "From Gambir/Pasar Senen Jakarta → Bandung Station (~3 hrs). Argo Parahyangan is the most frequent service.",
+  },
+  {
+    icon: "🚌",
+    method: "Bus / Travel",
+    description: "Damri, Primajasa, and various travel agents operate Jakarta–Bandung routes.",
+  },
+  {
+    icon: "🚗",
+    method: "Car / Rideshare",
+    description: "Via Tol Cipularang (~2.5 hrs from Jakarta). Gojek & Grab available throughout Bandung.",
+  },
+  {
+    icon: "✈️",
+    method: "From Airport",
+    description: "Husein Sastranegara Airport (BDO) is within Bandung city. Kertajati Airport (KJT) ~1.5 hrs via Tol Cisumdawu.",
+  },
+];
+---
+
+<section id="venue" class="py-16 bg-[#EEF4FF]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <!-- Venue info -->
+      <div class="space-y-6">
+        <div class="p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
+          <h3 class="text-xl font-bold text-gray-900 mb-6">Venue Details</h3>
+          <div class="space-y-4">
+            {venueDetails.map((detail) => (
+              <div class="flex items-start gap-4">
+                <span class="text-xl w-8 shrink-0">{detail.icon}</span>
+                <div>
+                  <div class="text-xs text-gray-400 uppercase tracking-widest mb-0.5">{detail.label}</div>
+                  <div class="text-gray-900 font-medium">{detail.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- How to get there -->
+        <div class="p-8 rounded-2xl bg-white border border-gray-100 shadow-sm">
+          <h3 class="text-xl font-bold text-gray-900 mb-6">Getting There</h3>
+          <div class="space-y-4">
+            {howToGet.map((item) => (
+              <div class="flex items-start gap-4">
+                <span class="text-xl w-8 shrink-0">{item.icon}</span>
+                <div>
+                  <div class="font-semibold text-[#326CE5] text-sm">{item.method}</div>
+                  <div class="text-gray-500 text-sm">{item.description}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Map + hotel -->
+      <div class="space-y-4">
+        <div class="w-full rounded-2xl border border-gray-200 overflow-hidden shadow-sm" style="height: 400px;">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.54584540672!2d107.5539395!3d-6.9174639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2sid!4v1"
+            class="w-full h-full border-0"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Venue map"
+          ></iframe>
+        </div>
+
+        <!-- Hotel recommendation -->
+        <div class="p-6 rounded-2xl bg-white border border-blue-100 shadow-sm">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🏨</span>
+            <div>
+              <h4 class="font-bold text-gray-900 mb-1">Nearby Hotels</h4>
+              <p class="text-sm text-gray-500">
+                TBA
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
