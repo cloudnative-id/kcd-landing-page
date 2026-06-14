@@ -3,12 +3,12 @@ const venueDetails = [
   {
     icon: "🏛️",
     label: "Venue",
-    value: "TBA",
+    value: "Selah Hall, Piset Square",
   },
   {
     icon: "📍",
     label: "Address",
-    value: "TBA",
+    value: "Jl. Pelajar Pejuang 45 No. 119, Bandung 40264, West Java",
   },
   {
     icon: "📅",
@@ -47,6 +47,21 @@ const howToGet = [
     icon: "✈️",
     method: "From Airport",
     description: "Husein Sastranegara Airport (BDO) is within Bandung city. Kertajati Airport (KJT) ~1.5 hrs via Tol Cisumdawu.",
+  },
+];
+
+const nearbyHotels = [
+  {
+    name: "Horison Ultima Bandung",
+    note: "Jl. Pelajar Pejuang 45 No. 121 — next door to the venue",
+  },
+  {
+    name: "The Bougenvile Hotel Bandung",
+    note: "Jl. Pelajar Pejuang 45 No. 67 — ~5 min walk",
+  },
+  {
+    name: "RedDoorz @ Pelajar Pejuang",
+    note: "Jl. Pelajar Pejuang 45 No. 22A — budget option nearby",
   },
 ];
 ---
@@ -92,7 +107,7 @@ const howToGet = [
       <div class="space-y-4">
         <div class="w-full rounded-2xl border border-gray-200 overflow-hidden shadow-sm" style="height: 400px;">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.54584540672!2d107.5539395!3d-6.9174639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2sid!4v1"
+            src="https://maps.google.com/maps?q=Selah+Hall+Piset+Square+Bandung&ll=-6.9340939,107.6255407&z=17&output=embed"
             class="w-full h-full border-0"
             allowfullscreen
             loading="lazy"
@@ -107,9 +122,17 @@ const howToGet = [
             <span class="text-2xl">🏨</span>
             <div>
               <h4 class="font-bold text-gray-900 mb-1">Nearby Hotels</h4>
-              <p class="text-sm text-gray-500">
-                TBA
+              <p class="text-sm text-gray-500 mb-3">
+                All within walking distance of Selah Hall.
               </p>
+              <ul class="space-y-2">
+                {nearbyHotels.map((hotel) => (
+                  <li>
+                    <div class="text-sm font-semibold text-gray-900">{hotel.name}</div>
+                    <div class="text-xs text-gray-500">{hotel.note}</div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
