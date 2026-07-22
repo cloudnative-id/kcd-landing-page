@@ -5,8 +5,13 @@ const tiers = [
     color: "#94A3B8",
     slots: 1,
     unlimited: false,
-    cardClass: "h-36",
+    cardClass: "h-52",
     textSize: "text-xl",
+    logoClass: "max-h-48",
+    maxWidth: "max-w-md",
+    logos: [
+      { src: "/sponsors/civo.webp", alt: "Civo", href: "https://www.civo.com/" },
+    ],
   },
   {
     name: "Gold",
@@ -15,6 +20,8 @@ const tiers = [
     unlimited: false,
     cardClass: "h-28",
     textSize: "text-lg",
+    logoClass: "max-h-20",
+    maxWidth: "max-w-xs",
   },
   {
     name: "Silver",
@@ -23,6 +30,8 @@ const tiers = [
     unlimited: true,
     cardClass: "h-24",
     textSize: "text-base",
+    logoClass: "max-h-16",
+    maxWidth: "max-w-xs",
   },
   {
     name: "Community",
@@ -31,6 +40,8 @@ const tiers = [
     unlimited: true,
     cardClass: "h-20",
     textSize: "text-sm",
+    logoClass: "max-h-14",
+    maxWidth: "max-w-xs",
     logos: [
       { src: "/sponsors/openinfra-logo.webp", alt: "OpenInfra", href: "https://openinfra.id/" },
       { src: "/sponsors/gdg-depok.webp", alt: "GDG Depok", href: "https://gdg.community.dev/gdg-depok/" },
@@ -60,13 +71,13 @@ const tiers = [
                   href={logo.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center justify-center min-w-[220px] flex-1 max-w-xs px-6"
+                  class={`flex items-center justify-center min-w-[220px] flex-1 ${tier.maxWidth} px-6`}
                 >
-                  <img src={logo.src} alt={logo.alt} class="max-h-20 w-auto object-contain" />
+                  <img src={logo.src} alt={logo.alt} class={`${tier.logoClass} w-auto object-contain`} />
                 </a>
               ) : (
                 <div
-                  class={`flex flex-col items-center justify-center ${tier.cardClass} min-w-[220px] flex-1 max-w-xs rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
+                  class={`flex flex-col items-center justify-center ${tier.cardClass} min-w-[220px] flex-1 ${tier.maxWidth} rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
                 >
                   <span class={`font-semibold text-gray-400 ${tier.textSize} mb-1`}>Your Logo Here</span>
                   <span class="text-xs text-gray-300">
