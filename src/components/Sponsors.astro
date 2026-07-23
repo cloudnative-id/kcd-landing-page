@@ -36,7 +36,7 @@ const tiers = [
   {
     name: "Community",
     color: "#326CE5",
-    slots: 4,
+    slots: 5,
     unlimited: true,
     cardClass: "h-20",
     textSize: "text-sm",
@@ -45,6 +45,8 @@ const tiers = [
     logos: [
       { src: "/sponsors/openinfra-logo.webp", alt: "OpenInfra", href: "https://openinfra.id/" },
       { src: "/sponsors/gdg-depok.webp", alt: "GDG Depok", href: "https://gdg.community.dev/gdg-depok/" },
+      { src: "/sponsors/gdg-jakarta.webp", alt: "GDG Jakarta", href: "https://gdg.community.dev/gdg-jakarta/" },
+      { src: "/sponsors/ardan-labs.webp", alt: "Ardan Labs", href: "https://www.ardanlabs.com/" },
     ],
   },
 ];
@@ -91,6 +93,23 @@ const tiers = [
           </div>
         </div>
       ))}
+
+      <!-- Co Organizer -->
+      <div>
+        <!-- Tier label -->
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-2.5 h-2.5 rounded-full" style="background-color: #8B5CF6;"></div>
+          <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400">Co Organizer</h3>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <!-- Co Organizer logos -->
+        <div class="flex flex-wrap justify-center items-center gap-4">
+          <a href="https://gdgbandung.com/" target="_blank" rel="noopener noreferrer">
+            <img src="/sponsors/gdg-bandung.webp" alt="GDG Bandung" class="max-h-14 w-auto object-contain" />
+          </a>
+        </div>
+      </div>
 
       <!-- Partner -->
       <div>
