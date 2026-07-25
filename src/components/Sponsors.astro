@@ -5,7 +5,7 @@ const tiers = [
     color: "#94A3B8",
     slots: 1,
     unlimited: false,
-    cardClass: "h-52",
+    cardClass: "h-48",
     textSize: "text-xl",
     logoClass: "max-h-48",
     maxWidth: "max-w-md",
@@ -18,10 +18,14 @@ const tiers = [
     color: "#F59E0B",
     slots: 4,
     unlimited: false,
-    cardClass: "h-28",
-    textSize: "text-lg",
-    logoClass: "max-h-20",
-    maxWidth: "max-w-xs",
+    grid: true,
+    cardClass: "h-40",
+    textSize: "text-xl",
+    logoClass: "max-h-32",
+    maxWidth: "max-w-sm",
+    logos: [
+      { src: "/sponsors/nutanix.webp", alt: "Nutanix", href: "https://www.nutanix.com/" },
+    ],
   },
   {
     name: "Silver",
@@ -66,21 +70,21 @@ const tiers = [
           </div>
 
           <!-- Placeholder cards -->
-          <div class="flex flex-wrap justify-center gap-4">
+          <div class={tier.grid ? "grid grid-cols-2 gap-4 max-w-2xl mx-auto" : "flex flex-wrap justify-center gap-4"}>
             {Array.from({ length: tier.slots }).map((_, i) => {
               const logo = tier.logos?.[i];
               return logo ? (
-                <a
+                  <a
                   href={logo.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class={`flex items-center justify-center min-w-[220px] flex-1 ${tier.maxWidth} px-6`}
+                  class={`flex items-center justify-center ${tier.cardClass} ${tier.grid ? "" : `min-w-[220px] flex-1 ${tier.maxWidth}`} px-6`}
                 >
                   <img src={logo.src} alt={logo.alt} class={`${tier.logoClass} w-auto object-contain`} />
                 </a>
               ) : (
                 <div
-                  class={`flex flex-col items-center justify-center ${tier.cardClass} min-w-[220px] flex-1 ${tier.maxWidth} rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
+                  class={`flex flex-col items-center justify-center ${tier.cardClass} ${tier.grid ? "" : `min-w-[220px] flex-1 ${tier.maxWidth}`} rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
                 >
                   <span class={`font-semibold text-gray-400 ${tier.textSize} mb-1`}>Your Logo Here</span>
                   <span class="text-xs text-gray-300">
