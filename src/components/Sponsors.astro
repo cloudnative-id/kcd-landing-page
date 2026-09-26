@@ -18,7 +18,6 @@ const tiers = [
     color: "#F59E0B",
     slots: 3,
     unlimited: false,
-    grid: true,
     cardClass: "h-40",
     textSize: "text-xl",
     logoClass: "max-h-32",
@@ -26,6 +25,7 @@ const tiers = [
     logos: [
       { src: "/sponsors/nutanix.webp", alt: "Nutanix", href: "https://www.nutanix.com/" },
       { src: "/sponsors/redhat.webp", alt: "Red Hat", href: "https://www.redhat.com/" },
+      { src: "/sponsors/datadog.webp", alt: "Datadog", href: "https://www.datadoghq.com/" },
     ],
   },
   {
@@ -77,46 +77,17 @@ const tiers = [
 
           <!-- Logo cards -->
           <div class={tier.grid ? "grid gap-4 max-w-2xl mx-auto" : "flex flex-wrap justify-center gap-4"} style={tier.grid ? `grid-template-columns: repeat(${tier.gridCols || 2}, minmax(0, 1fr))` : ""}>
-            {Array.from({ length: tier.slots }).map((_, i) => {
-              const logo = tier.logos?.[i];
-              const isOddPlaceholder = tier.grid && !logo && i === tier.slots - 1 && tier.slots % 2 !== 0;
-              if (isOddPlaceholder) return null;
-              return logo ? (
-                  <a
-                  href={logo.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class={`flex items-center justify-center ${tier.cardClass} ${tier.grid ? "" : `min-w-[220px] flex-1 ${tier.maxWidth}`} px-6`}
-                >
-                  <img src={logo.src} alt={logo.alt} class={`${tier.logoClass} w-auto object-contain`} />
-                </a>
-              ) : (
-                <div
-                  class={`flex flex-col items-center justify-center ${tier.cardClass} ${tier.grid ? "" : `min-w-[220px] flex-1 ${tier.maxWidth}`} rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}
-                >
-                  <span class={`font-semibold text-gray-400 ${tier.textSize} mb-1`}>Your Logo Here</span>
-                  <span class="text-xs text-gray-300">
-                    {tier.unlimited
-                      ? "(open)"
-                      : `(${tier.slots - i} spot${tier.slots - i !== 1 ? "s" : ""} available)`}
-                  </span>
-                </div>
-              );
-            })}
+            {tier.logos.map((logo) => (
+              <a
+                href={logo.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={`flex items-center justify-center ${tier.cardClass} ${tier.grid ? "" : `min-w-[220px] flex-1 ${tier.maxWidth}`} px-6`}
+              >
+                <img src={logo.src} alt={logo.alt} class={`${tier.logoClass} w-auto object-contain`} />
+              </a>
+            ))}
           </div>
-          <!-- Centered odd placeholder -->
-          {tier.grid && tier.slots % 2 !== 0 && !tier.logos?.[tier.slots - 1] && (
-            <div class="flex justify-center mt-4">
-              <div class={`flex flex-col items-center justify-center ${tier.cardClass} w-full max-w-xl rounded-2xl bg-gray-50 border-2 border-dashed border-gray-300`}>
-                <span class={`font-semibold text-gray-400 ${tier.textSize} mb-1`}>Your Logo Here</span>
-                <span class="text-xs text-gray-300">
-                  {tier.unlimited
-                    ? "(open)"
-                    : `(1 spot available)`}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       ))}
 
