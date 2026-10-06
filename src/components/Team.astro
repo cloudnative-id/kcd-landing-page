@@ -1,0 +1,65 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const byOrder = (a: CollectionEntry<'team'>, b: CollectionEntry<'team'>) =>
+  (a.data.order ?? Infinity) - (b.data.order ?? Infinity) ||
+  a.data.name.localeCompare(b.data.name);
+
+const people = (await getCollection('team')).sort(byOrder);
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
+---
+
+<section id="team" class="py-16 bg-[#EEF4FF]">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {people.length === 0 ? (
+      <p class="text-center text-gray-400 text-sm py-8">To be announced soon.</p>
+    ) : (
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {people.map(({ data }) => (
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col items-center text-center">
+            {data.photo ? (
+              <Image
+                src={data.photo}
+                alt={data.name}
+                width={288}
+                height={288}
+                class="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover mb-4"
+              />
+            ) : (
+              <div
+                class="w-28 h-28 sm:w-36 sm:h-36 rounded-full mb-4 flex items-center justify-center text-white text-3xl sm:text-4xl font-bold"
+                style="background: linear-gradient(135deg, #0f2550 0%, #326CE5 100%);"
+                aria-hidden="true"
+              >
+                {initials(data.name)}
+              </div>
+            )}
+            <h3 class="font-bold text-gray-900 leading-tight">{data.name}</h3>
+            <p class="mt-1 text-sm text-gray-500">{data.role}</p>
+          {data.company && <p class="text-sm font-medium text-[#326CE5]">{data.company}</p>}
+            {data.linkedin && (
+              <a
+                href={data.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-auto pt-3 text-gray-400 hover:text-[#0A66C2] transition-colors"
+                aria-label={`${data.name} on LinkedIn`}
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+                </svg>
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

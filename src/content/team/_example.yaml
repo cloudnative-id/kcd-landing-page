@@ -1,0 +1,12 @@
+# Copy this file to `<your-name>.yaml` (e.g. `jane-doe.yaml`) and fill it in.
+# Files starting with `_` are ignored.
+name: Jane Doe
+role: DevOps Engineer
+# Optional
+# company: Example Corp
+# Optional: put the photo (square, .webp/.jpg/.png) next to this file.
+# photo: ./jane-doe.webp
+# Optional
+# linkedin: https://www.linkedin.com/in/jane-doe
+# Optional: lower numbers are shown first, otherwise sorted by name.
+# order: 1
