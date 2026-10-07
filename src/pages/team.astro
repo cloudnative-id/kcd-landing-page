@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import PageHero from '../components/PageHero.astro';
+import Team from '../components/Team.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Team — KCD Indonesia 2026"
+  description="Meet the organizers and volunteers behind Kubernetes Community Days Indonesia 2026."
+>
+  <Navbar />
+  <main>
+    <PageHero
+      badge="Team"
+      title="Meet the"
+      highlight="Team"
+      subtitle="The organizers and volunteers from the Indonesian cloud native community who make KCD Indonesia happen."
+    />
+    <Team />
+  </main>
+  <Footer />
+</Layout>
