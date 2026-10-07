@@ -1,0 +1,323 @@
+---
+// Floor plan coordinates are in map units; the plan is drawn at ~22.4 units per metre.
+const M = 22.4;
+
+const booths = [
+  { id: "1", label: "Community Booth", tier: "", color: "#16A34A", x: 55, y: 697, w: 2, h: 2 },
+  { id: "2", label: "Civo", tier: "Platinum Sponsor", color: "#1D4ED8", x: 45, y: 408, w: 2, h: 4 },
+  { id: "3", label: "Photo Booth", tier: "", color: "#A855F7", x: 91, y: 242, w: 4.8, h: 2.4 },
+  { id: "4", label: "Datacom", tier: "Silver Sponsor", color: "#64748B", x: 228, y: 306, w: 2, h: 2 },
+  { id: "5", label: "Datadog", tier: "Gold Sponsor", color: "#F59E0B", x: 228, y: 362, w: 2, h: 3 },
+  { id: "6", label: "Nutanix", tier: "Gold Sponsor", color: "#F59E0B", x: 228, y: 446, w: 2, h: 3 },
+  { id: "7", label: "Red Hat", tier: "Gold Sponsor", color: "#F59E0B", x: 228, y: 530, w: 2, h: 3 },
+];
+
+// Interior structural columns (8 m grid)
+const columns = [[630, 250], [809, 250], [630, 429], [809, 429]];
+// Columns standing in the expo zone
+const expoColumns = [[177, 413], [125, 545]];
+const upperColumns = [[932, 1042], [806, 1170], [808, 1300]];
+
+// Diagonal stairs: a true rectangle at 45°, top-left corner where the walkway meets it.
+const STAIR_TOP = [1330, 970];
+const STAIR_RUN = 190;   // along the climb (towards the walkway)
+const STAIR_WIDTH = 155; // across the flight
+const STAIR_STEPS = 7;
+const r = Math.SQRT1_2;
+const up = [r, -r];
+const across = [r, r];
+const add = (p: number[], d: number[], k: number) => [p[0] + d[0] * k, p[1] + d[1] * k];
+const stairBottom = add(STAIR_TOP, up, -STAIR_RUN);
+const stairCorners = [stairBottom, STAIR_TOP, add(STAIR_TOP, across, STAIR_WIDTH), add(stairBottom, across, STAIR_WIDTH)];
+const stairPoints = stairCorners.map((p) => p.map((n) => n.toFixed(1)).join(",")).join(" ");
+const stairTreads = Array.from({ length: STAIR_STEPS }, (_, i) => {
+  const p = add(stairBottom, up, (STAIR_RUN * (i + 1)) / (STAIR_STEPS + 1));
+  return [p, add(p, across, STAIR_WIDTH)];
+});
+// Where the stair's left edge crosses the toilet's bottom wall (y = 1030)
+const [sbx, sby] = stairBottom;
+const [sb2x, sb2y] = stairCorners[3];
+const edgeAt1030 = sbx + (sby - 1030);
+
+// Shared drawing styles
+const WALL = "#0F172A";
+const ROOM = "#E2E8F0";
+const STAGE = "#1E293B";
+const FLOOR = "#F1F5F9";
+const ACCENT = "#326CE5";
+const DOOR = "#DC2626";
+
+// Entrances: wall openings marked by two parallel red jambs.
+// "h" = opening in a horizontal wall at y, from a to b; "v" = vertical wall at x.
+const entrances = [
+  { dir: "h", at: 607, a: 700, b: 740 },    // Main hall
+  { dir: "h", at: 768, a: 140, b: 252 },    // Expo zone, south
+  { dir: "v", at: 1028, a: 645, b: 715 },   // Expo zone, east (to walkway)
+  { dir: "v", at: 1136, a: 1172, b: 1213 }, // Upper hall
+  { dir: "h", at: 1380, a: 1624, b: 1684 }, // Breakout room 1
+  { dir: "h", at: 1545, a: 1785, b: 1845 }, // Breakout room 2
+];
+const JAMB = 16;
+---
+
+<section id="layout" class="py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <span class="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#326CE5] bg-blue-50 border border-blue-100 rounded-full mb-4">
+        Floor Plan
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-black text-gray-900">Event Layout</h2>
+      <p class="mt-3 text-gray-500 max-w-2xl mx-auto">
+        Find your way around Selah Hall: talks, sponsor booths, and breakout rooms.
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 bg-[#F8FAFC] shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <svg
+          id="layout-map"
+          viewBox="0 0 2010 1770"
+          class="block w-full min-w-[860px] h-auto select-none"
+          role="img"
+          aria-label="Event floor plan of Selah Hall with main hall, expo zone, upper hall and breakout rooms"
+          font-family="Inter, sans-serif"
+        >
+          <defs>
+            <pattern id="hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="14" height="14" fill="#F1F5F9" />
+              <line x1="0" y1="0" x2="0" y2="14" stroke="#CBD5E1" stroke-width="3" />
+            </pattern>
+          </defs>
+
+          <!-- ============ Expo & booth zone (outside the hall) ============ -->
+          <path d="M22 230 H272 V607 H1028 V768 H22 Z" fill="#E6EFFE" />
+          <path d="M272 230 H22 V768 H140 M252 768 H1028 V715 M1028 645 V607" fill="none" stroke={WALL} stroke-width="4" stroke-linejoin="round" />
+
+          <text x="250" y="990" text-anchor="middle" font-size="22" font-weight="700" fill="#94A3B8" letter-spacing="2">INSIDE MALL</text>
+
+          <!-- Registration table in front of the main hall -->
+          <rect x="472" y="620" width="208" height="32" rx="6" fill="#0D9488" />
+          <text x="576" y="642" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">Registration</text>
+
+          <!-- Expo zone toilet -->
+          <rect x="900" y="722" width="110" height="46" fill={ROOM} stroke={WALL} stroke-width="2.5" />
+          <text x="955" y="751" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">Toilet</text>
+
+          <!-- ============ West annex (staff only) ============ -->
+          <rect x="272" y="230" width="180" height="377" fill="url(#hatch)" />
+          <path d="M452 607 H272 V230 H452 M272 429 H452" fill="none" stroke={WALL} stroke-width="4" />
+
+          <!-- ============ Main hall ============ -->
+          <rect x="452" y="50" width="536" height="557" fill="#FFFFFF" />
+          <rect x="610" y="100" width="290" height="450" rx="10" fill="#EEF4FF" />
+          <rect x="865" y="50" width="123" height="88" fill={ROOM} />
+          <text x="926" y="100" text-anchor="middle" font-size="18" font-weight="600" fill="#334155">Toilet</text>
+          <rect x="930" y="262" width="58" height="156" fill={ROOM} />
+          <text transform="translate(964 340) rotate(-90)" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">Multimedia</text>
+          <path d="M865 50 V138 H988 M930 262 V418 H988 M930 262 H988" fill="none" stroke={WALL} stroke-width="2.5" />
+          <path d="M460 138 H550 L582 182 V465 L550 507 H460 Z" fill={STAGE} stroke-linejoin="round" />
+          <text x="521" y="330" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Stage</text>
+          <text x="756" y="340" text-anchor="middle" font-size="44" font-weight="900" fill={WALL}>Main Hall</text>
+          {[...columns, ...expoColumns].map(([cx, cy]) => <rect x={cx - 6} y={cy - 6} width="12" height="12" rx="2" fill="#94A3B8" />)}
+          <!-- Walls with door openings -->
+          <path d="M452 607 V50 H988 V607 H740 M700 607 H452" fill="none" stroke={WALL} stroke-width="6" stroke-linejoin="round" />
+          <text x="720" y="650" text-anchor="middle" font-size="16" font-weight="700" fill={WALL}>Entrance</text>
+
+          <!-- ============ East block (not in use), attached to the main hall ============ -->
+          <path d="M988 50 H1575 V607 H988 Z M1165 403 H1300 V607 H1165 Z" fill="url(#hatch)" fill-rule="evenodd" />
+          <rect x="1165" y="403" width="135" height="204" fill="#FFFFFF" />
+          <g stroke="#94A3B8" stroke-width="3">
+            {[510, 535, 560, 585].map((y) => <line x1="1172" y1={y} x2="1226" y2={y} />)}
+          </g>
+          <path d="M988 50 H1575 V607 H1300 M1230 607 H988" fill="none" stroke={WALL} stroke-width="6" stroke-linejoin="round" />
+          <path d="M1165 607 V403 H1300 V607 M1230 495 V607" fill="none" stroke={WALL} stroke-width="3" stroke-linejoin="round" />
+          <text x="1265" y="636" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">Stairs</text>
+
+          <!-- ============ Parking area (outside) ============ -->
+          <rect x="1595" y="22" width="405" height="585" rx="8" fill="#E5E7EB" />
+          <g stroke="#FFFFFF" stroke-width="3">
+            {Array.from({ length: 12 }, (_, i) => 70 + i * 46).map((y) => <line x1="1605" y1={y} x2="1695" y2={y} />)}
+          </g>
+          <rect x="1748" y="300" width="40" height="40" rx="6" fill={ACCENT} />
+          <text x="1768" y="330" text-anchor="middle" font-size="28" font-weight="900" fill="#FFFFFF">P</text>
+          <text x="1800" y="328" font-size="22" font-weight="700" fill="#475569">Parking Area</text>
+
+          <!-- ============ Prayer room & canteen (outside) ============ -->
+          <rect x="1735" y="85" width="240" height="130" fill="#FFFFFF" stroke={WALL} stroke-width="4" />
+          <text x="1855" y="157" text-anchor="middle" font-size="22" font-weight="700" fill="#334155">Prayer Room</text>
+          <rect x="1795" y="450" width="170" height="148" fill="#FFFFFF" stroke={WALL} stroke-width="4" />
+          <text x="1880" y="531" text-anchor="middle" font-size="22" font-weight="700" fill="#334155">Canteen</text>
+
+          <!-- ============ Walkway to the stairs ============ -->
+          <path d="M1028 768 C1130 768 1180 783 1210 805 L1330 970" fill="none" stroke={WALL} stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <text transform="translate(1292 872) rotate(54)" text-anchor="middle" font-size="16" font-weight="600" fill="#64748B">Walkway</text>
+
+          <!-- ============ Toilet beside the stairs, reached from the landing ============ -->
+          <path d={`M1136 1030 H${edgeAt1030} L${sbx} ${sby} L${sb2x} ${sb2y} V1380 H1965 V1545 H1136 Z`} fill={FLOOR} />
+          <rect x="1136" y="972" width="104" height="58" fill={ROOM} />
+          <path d={`M1136 972 H1240 V1030 H1210 M1165 1030 H1136 M1240 1030 H${edgeAt1030}`} fill="none" stroke={WALL} stroke-width="4" stroke-linejoin="round" />
+          <text x="1188" y="1007" text-anchor="middle" font-size="15" font-weight="600" fill="#334155">Toilet</text>
+
+          <!-- ============ Diagonal stairs ============ -->
+          <polygon points={stairPoints} fill={FLOOR} />
+          <g stroke="#94A3B8" stroke-width="3">
+            {stairTreads.map(([a, b]) => <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />)}
+          </g>
+          <g stroke={WALL} stroke-width="4" stroke-linecap="round">
+            {[[stairCorners[0], stairCorners[1]], [stairCorners[3], stairCorners[2]]].map(([a, b]) => <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />)}
+          </g>
+          <text x="1460" y="1135" font-size="20" font-weight="700" fill="#334155">Stairs</text>
+
+          <!-- ============ Upper hall ============ -->
+          <rect x="683" y="972" width="453" height="363" fill="#FFFFFF" />
+          <rect x="693" y="1112" width="80" height="213" rx="8" fill={STAGE} />
+          <text transform="translate(740 1218) rotate(-90)" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">Stage</text>
+          <text x="930" y="1175" text-anchor="middle" font-size="40" font-weight="900" fill={WALL}>Upper Hall</text>
+          {upperColumns.map(([cx, cy]) => <rect x={cx - 6} y={cy - 6} width="12" height="12" rx="2" fill="#94A3B8" />)}
+          <path d="M1136 1215 V1335 H683 V972 H1136 V1170" fill="none" stroke={WALL} stroke-width="6" stroke-linejoin="round" />
+          <text x="1122" y="1240" text-anchor="end" font-size="14" font-weight="700" fill={WALL}>Entrance</text>
+
+          <!-- ============ Passage, corridor & breakout rooms ============ -->
+          <g stroke="#94A3B8" stroke-width="3">
+            {[1280, 1305, 1330, 1355].map((y) => <line x1="1146" y1={y} x2="1297" y2={y} />)}
+          </g>
+          <text x="1221" y="1262" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">Stairs</text>
+          <path d={`M1136 1335 V1545 H1965 V1380 H1780 M1528 1380 H${sb2x} V${sb2y}`} fill="none" stroke={WALL} stroke-width="5" stroke-linejoin="round" />
+          <text x="1400" y="1475" text-anchor="middle" font-size="22" font-weight="600" fill="#94A3B8">Corridor</text>
+
+          <rect x="1528" y="1230" width="252" height="150" fill="#E6EFFE" />
+          <path d="M1624 1380 H1528 V1230 H1780 V1380 H1684" fill="none" stroke={WALL} stroke-width="5" stroke-linejoin="round" />
+          <text x="1654" y="1298" text-anchor="middle" font-size="26" font-weight="800" fill={WALL}>Breakout</text>
+          <text x="1654" y="1330" text-anchor="middle" font-size="26" font-weight="800" fill={WALL}>Room 1</text>
+
+          <rect x="1665" y="1545" width="300" height="200" fill="#E6EFFE" />
+          <path d="M1785 1545 H1665 V1745 H1965 V1545 H1845" fill="none" stroke={WALL} stroke-width="5" stroke-linejoin="round" />
+          <text x="1815" y="1640" text-anchor="middle" font-size="26" font-weight="800" fill={WALL}>Breakout</text>
+          <text x="1815" y="1672" text-anchor="middle" font-size="26" font-weight="800" fill={WALL}>Room 2</text>
+
+          <text x="1654" y="1418" text-anchor="middle" font-size="14" font-weight="700" fill={WALL}>Entrance</text>
+          <text x="1815" y="1518" text-anchor="middle" font-size="14" font-weight="700" fill={WALL}>Entrance</text>
+
+          <!-- Outdoor area around the walkway -->
+          <text x="1760" y="780" text-anchor="middle" font-size="22" font-weight="700" fill="#94A3B8" letter-spacing="2">OUTSIDE</text>
+
+          <!-- ============ Entrances ============ -->
+          <g stroke={DOOR} stroke-width="6" stroke-linecap="round">
+            {entrances.map((e) => [e.a, e.b].map((p) =>
+              e.dir === "h"
+                ? <line x1={p} y1={e.at - JAMB} x2={p} y2={e.at + JAMB} />
+                : <line x1={e.at - JAMB} y1={p} x2={e.at + JAMB} y2={p} />
+            ))}
+          </g>
+
+          <!-- ============ Booths ============ -->
+          {booths.map((b) => {
+            const w = b.w * M;
+            const h = b.h * M;
+            const cx = b.x + w / 2;
+            const cy = b.y + h / 2;
+            return (
+              <g class="layout-item cursor-pointer transition-opacity" data-item={b.id} tabindex="0" aria-label={`${b.id}. ${b.label}${b.tier ? `, ${b.tier}` : ""}`}>
+                <title>{`${b.id}. ${b.label}${b.tier ? ` (${b.tier})` : ""}`}</title>
+                <rect x={b.x} y={b.y} width={w} height={h} rx="6" fill={b.color} />
+                <circle cx={cx} cy={cy} r="13" fill="#FFFFFF" />
+                <text x={cx} y={cy + 6} text-anchor="middle" font-size="17" font-weight="800" fill={b.color}>{b.id}</text>
+              </g>
+            );
+          })}
+
+          <!-- ============ Scale bar ============ -->
+          <g transform="translate(60 1690)" fill="#64748B">
+            <rect x="0" y="0" width={5 * M} height="8" fill="#0F172A" />
+            <rect x={5 * M} y="0" width={5 * M} height="8" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+            <text x="0" y="32" font-size="16">0</text>
+            <text x={5 * M} y="32" font-size="16" text-anchor="middle">5</text>
+            <text x={10 * M} y="32" font-size="16" text-anchor="middle">10 m</text>
+            <text x="0" y="-16" font-size="15">Approximate scale</text>
+          </g>
+        </svg>
+      </div>
+      <p class="md:hidden px-4 py-2 text-xs text-gray-400 border-t border-gray-200">Swipe sideways to see the full map.</p>
+    </div>
+
+    <!-- Legend -->
+    <div class="mt-8 grid gap-6 lg:grid-cols-3">
+      <div class="lg:col-span-2 p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-4">Booths</h3>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+          {booths.map((b) => (
+            <li>
+              <button
+                type="button"
+                class="layout-legend w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
+                data-item={b.id}
+              >
+                <span class="w-7 h-7 shrink-0 rounded-md flex items-center justify-center text-xs font-bold text-white" style={`background-color: ${b.color};`}>{b.id}</span>
+                <span class="min-w-0">
+                  <span class="block text-sm font-semibold text-gray-900">{b.label}</span>
+                  {b.tier && <span class="block text-xs text-gray-500">{b.tier}</span>}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-4">Map Key</h3>
+        <ul class="space-y-3 text-sm text-gray-600">
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 rounded border-2 border-[#0F172A] bg-[#E6EFFE]"></span>
+            Expo &amp; booth zone
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 rounded bg-[#0D9488]"></span>
+            Registration
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 rounded bg-[#1E293B]"></span>
+            Stage
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 rounded border border-gray-300" style="background: repeating-linear-gradient(45deg, #F1F5F9 0 4px, #CBD5E1 4px 6px);"></span>
+            Staff only / not in use
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 flex items-center justify-center"><span class="w-6 h-4 border-x-[3px] border-[#DC2626]"></span></span>
+            Door / entrance
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-7 h-5 shrink-0 flex items-center justify-center"><span class="w-3 h-3 rounded-sm bg-[#94A3B8]"></span></span>
+            Structural column
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const map = document.getElementById("layout-map");
+  const items = document.querySelectorAll<SVGGElement>(".layout-item");
+  const legend = document.querySelectorAll<HTMLButtonElement>(".layout-legend");
+
+  function highlight(id: string | null) {
+    items.forEach((el) => {
+      el.style.opacity = id && el.dataset.item !== id ? "0.2" : "1";
+    });
+    legend.forEach((el) => {
+      el.classList.toggle("bg-blue-50", el.dataset.item === id);
+    });
+  }
+
+  [...items, ...legend].forEach((el) => {
+    const id = (el as HTMLElement | SVGElement).dataset.item ?? null;
+    el.addEventListener("mouseenter", () => highlight(id));
+    el.addEventListener("focus", () => highlight(id));
+    el.addEventListener("mouseleave", () => highlight(null));
+    el.addEventListener("blur", () => highlight(null));
+  });
+
+  map?.addEventListener("click", (e) => {
+    if (!(e.target as Element).closest(".layout-item")) highlight(null);
+  });
+</script>
